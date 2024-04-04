@@ -12,7 +12,7 @@ int main()
     int st=0;    
 
     vector<vector<int>> map;
-    vector<vector<int>> move = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}}; // 북, 동, 남, 서
+    vector<vector<int>> move = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}}; // 북, 동, 남, 서
     vector<int> di = {0, 1, 2, 3};                                 // 북동남서
 
     cin >> N >> M;
@@ -29,24 +29,28 @@ int main()
         }
         map.push_back(v);
     }
-
-    while (A<N&&B<M&&st<4){
+    d = di[(d+1) % 4];
+    
+    while (0<A<N&&0<B<M&&st<4){
         if (map[A][B] == 0)
         {
             map[A][B] = 1;
-            A += move[d][0];
-            B += move[d][1];
+            
             cnt++;
             st=0;
         }
         else{
             d = di[(d+1) % 4];
+            if(map[A+move[d][0]][B+move[d][1]] == 0){
+                A += move[d][0];
+                B += move[d][1];
+            }
             st++;
         }
 
     }
 
     cout<<cnt;
-    
+
     return 0;
 }

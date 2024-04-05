@@ -2,15 +2,12 @@
 #include <algorithm>
 #include <string>
 #include <vector>
-#include <stack>
-#include <queue>
-#include <cmath>
+#include <sstream>
 
-#define Ascii 48
 
-bool cal(std::string, std::vector<int>);
+bool cal(std::string, std::vector<std::string>);
 
-std::vector<std::vector<int>> rst;
+std::vector<std::vector<std::string>> rst;
 
 int main() {
     std::ios::sync_with_stdio(false);
@@ -25,84 +22,57 @@ int main() {
     while (num < T) {
         std::string p, arr;
         int n;
-        std::vector<int> vec;
+        std::vector<std::string> vec;
 
         std::cin >> p;
 
         std::cin >> n;
         std::cin >> arr;
 
-        for (int i = 1; i < arr.size(); i++) {
-            int a = 0;
-            std::stack<int> stk;
-            if (arr[i] == ']')
-                break;
-            while (arr[i] != ','&&arr[i]!=']') {
-                stk.push(int(arr[i]) - Ascii);
-                i++;
-            }
-            int b = stk.size();
-            for (int j = 0; j < b; j++) {
-                
-                a += (stk.top() * pow(10, j));
-                stk.pop();
-            }
-            vec.push_back(a);
+        arr.pop_back();
+        reverse(arr.begin(), arr.end());
+        arr.pop_back();
+        reverse(arr.begin(), arr.end());
+
+        std::vector<std::string> words;
+        std::stringstream sstream(arr);
+        std::string word;
+
+        while (getline(sstream, word, ','))
+        {
+            words.push_back(word);
         }
 
-        TF.push_back(cal(p, vec));
+        TF.push_back(cal(p, words));
 
         num++;
     }
 
     for (int i = 0; i < T; i++) {
         if (TF[i]) {
-            std::string rt;
+            std::vector<std::string> rt;
 
-            rt.push_back('[');
-
+            rt.push_back("[");
             for (int j = 0; j < rst[i].size(); j++) {
-                
-                std::queue<int> que;
-
-                if (rst[i][j] > 9) {
-                    int a = rst[i][j];
-                    if (a > 99) {
-                        
-                        que.push(a/100);
-                        a %= 100;
-                    }
-                    que.push(a / 10);
-                    a %= 10;
-                    que.push(a);
-
-                    for (int k = 0; k < que.size();) {
-                        rt.push_back(char(que.front() + Ascii));
-                        que.pop();
-                        
-                    }
-                    rt.push_back(',');
-                }
-
-                else{
-                    rt.push_back(char(rst[i][j] + Ascii));
-                    rt.push_back(',');
-                }
+                rt.push_back(rst[i][j]);
+                rt.push_back(",");
             }
-            rt.pop_back();
-            rt.push_back(']');
 
-            std::cout << rt << "\n";
+            rt.pop_back();
+            rt.push_back("]");
+
+            for (int j = 0; j < rt.size(); j++) {
+                std::cout << rt[j];
+            }
+            std::cout << "\n";
         }
         else
             std::cout << "error" << "\n";
     }
-
     return 0;
-
 }
 
-bool cal(std::string p, std::vector<int> vec) {
+bool cal(std::string p, std::vector<std::string> vec) {
     int a = 0;
 
     for (int i = 0; i < p.size(); i++) {

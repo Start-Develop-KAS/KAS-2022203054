@@ -3,11 +3,12 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <deque>
 
 
-bool cal(std::string, std::vector<std::string>);
+bool cal(std::string, std::deque<std::string>);
 
-std::vector<std::vector<std::string>> rst;
+std::vector<std::deque<std::string>> rst;
 
 int main() {
     std::ios::sync_with_stdio(false);
@@ -32,9 +33,10 @@ int main() {
         arr.pop_back();
         reverse(arr.begin(), arr.end());
         arr.pop_back();
-        reverse(arr.begin(), arr.end());
+        if(arr.size()!=0)
+            reverse(arr.begin(), arr.end());
 
-        std::vector<std::string> words;
+        std::deque<std::string> words;
         std::stringstream sstream(arr);
         std::string word;
 
@@ -51,14 +53,14 @@ int main() {
     for (int i = 0; i < T; i++) {
         if (TF[i]) {
             std::vector<std::string> rt;
-
+            
             rt.push_back("[");
             for (int j = 0; j < rst[i].size(); j++) {
                 rt.push_back(rst[i][j]);
                 rt.push_back(",");
             }
-
-            rt.pop_back();
+            if(rt.size()>1)
+                rt.pop_back();
             rt.push_back("]");
 
             for (int j = 0; j < rt.size(); j++) {
@@ -72,30 +74,36 @@ int main() {
     return 0;
 }
 
-bool cal(std::string p, std::vector<std::string> vec) {
-    int a = 0;
+bool cal(std::string p, std::deque<std::string> vec) {
+    bool isReversed = false; // 뒤집힌 상태를 추적하는 플래그
 
-    for (int i = 0; i < p.size(); i++) {
-        switch (p[i])
-        {
-        case 'R':
-            reverse(vec.begin(), vec.end());
-            a++;
-            break;
-        case 'D':
-            if (vec.empty())
-                break;
-            reverse(vec.begin(), vec.end());
-            vec.pop_back();
-            reverse(vec.begin(), vec.end());
-            a++;
-            break;
+    for (char cmd : p) {
+        if (cmd == 'R') {
+            // 뒤집기 명령어가 호출될 때마다 상태를 토글
+            isReversed = !isReversed;
+        } else if (cmd == 'D') {
+            if (vec.empty()) {
+                rst.push_back(vec);
+                return false;
+            }
+            // 뒤집힌 상태에 따라 앞 또는 뒤에서 원소 제거
+            if (isReversed) {
+                vec.pop_back();
+            } else {
+                vec.pop_front();
+            }
         }
     }
+
+    // 최종 상태가 뒤집힌 상태라면 뒤집기
+    if (isReversed) {
+        std::reverse(vec.begin(), vec.end());
+    }
+
     rst.push_back(vec);
 
-    if (a < p.size())
-        return false;
-
+    // 성공적으로 명령어를 처리했다면 true 반환
     return true;
+    
+
 }

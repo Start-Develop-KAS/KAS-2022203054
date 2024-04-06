@@ -48,6 +48,7 @@ int main()
                 if ((max = search_max(candy_, N)) == N)
                 {
                     TF = true;
+                    MAX.push_back(max);
                     break;
                 }
                 MAX.push_back(max);
@@ -71,6 +72,7 @@ int main()
                 break;
         }
     } 
+    
     sort(MAX.begin(), MAX.end());
     std::cout << MAX[MAX.size()-1];
 
@@ -89,6 +91,12 @@ int search_max(std::vector<std::string> candy, int N)
         {
             if (candy[i][j - 1] == candy[i][j])
                 max_++;
+            else{
+                max.push_back(max_ + 1);
+                max_ = 0; 
+            }
+                
+            
             if (max_ == N - 1)
                 return N;
         }
@@ -98,6 +106,10 @@ int search_max(std::vector<std::string> candy, int N)
         {
             if (candy[j - 1][i] == candy[j][i])
                 max_++;
+            else{
+                max.push_back(max_ + 1);
+                max_ = 0; 
+            }
             if (max_ == N - 1)
                 return N;
         }

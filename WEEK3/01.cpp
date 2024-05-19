@@ -14,18 +14,17 @@ bool DFS(int M, int N, vector<vector<bool>> &TF)
     vector<int> vec;
     vec = ice[M];
 
-    if (N < 0 || N > vec.size())
+    if (N < 0 || N >= vec.size())
         return false;
-
-    TF[M][N] = true;
 
     if (vec[N] == 0 && TF[M][N] == false)
     {
+        TF[M][N] = true;
         DFS(M + 1, N, TF);
         DFS(M - 1, N, TF);
         DFS(M, N + 1, TF);
         DFS(M, N - 1, TF);
-
+        
         return true;
     }
 
@@ -53,7 +52,8 @@ int main()
         cin >> num;
         for (int j = 0; j < M; j++)
         {
-            vec.push_back(int(num[i]));
+            int numi=int(num[j])-'0';
+            vec.push_back(numi);
         }
 
         ice.push_back(vec);
@@ -63,7 +63,7 @@ int main()
     {
         for (int j = 0; j < M; j++)
         {
-            if (DFS(N, M, TF))
+            if (DFS(i, j, TF))
                 rst += 1;
         }
     }
